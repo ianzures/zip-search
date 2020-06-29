@@ -5,28 +5,6 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-class ZipSearch extends React.Component {
-        state = {
-        persons: []
-    }
-
-    componentDidMount() {
-        axios.get(`http://ctp-zip-api.herokuapp.com/zip/10016`)
-            .then(res => {
-                const persons = res.data;
-                this.setState({ persons });
-            })
-    }
-
-    render() {
-        return (
-            <div>
-                {this.state.persons.map(person => <p>{person.City},{person.State}</p>)}
-            </div>
-        )
-    }
-}
-/*
 const divStyle = {
     fontSize: '300%',
     fontWeight: 'bold',
@@ -50,24 +28,79 @@ const search = {
     marginTop: '20px'
 }
 
-render(){
-    <div>
-        <div style={boxColor}>
-            <div style={divStyle} >
-                Zip Code Search
-            </div>
-        </div>
-        <form style={search}>
-            <label>
-                Zip Code:
-                <input type="text" name="name" />
-            </label>
-            <input type="submit" value="Submit" />
-        </form>
-    </div>}
-);*/
+const result = {
+    display: 'flex',
+    justifyContent: 'center'
+}
+
+export default class ZipSearch extends React.Component{
+    state = {
+        cities: [],
+        zip : '11435'
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+
+        axios.get("http://ctp-zip-api.herokuapp.com/zip/" + this.state.zip).
+            then(results => {
+                this.setState({ cities: results.data });
+                console.log(this.state.cities);
+            });
+    }
+
+    handleChange = event => {
+        this.setState({ zip: event.target.value });
+    };
+
+    /*constructor(props) {
+        super(props);
+        this.url = "http://ctp-zip-api.herokuapp.com/zip/10016";
+        this.state = {
+           // zip: "",
+            cities: []
+        };
+    }
+
+    
+
+    componentDidMount() {
+        axios.get(this.props.url + this.state.zip)
+            .then(res => {
+                const cityList = res.data;
+                this.setState({ cityList });
+            })
 
 
+
+
+                
+    }*/
+
+    render() {
+        return (
+            <React.Fragment>
+                {/* --------------------------- */}
+                <div style={boxColor}>
+                    <div style={divStyle} >
+                        Zip Code Search
+                    </div>
+                </div>
+
+                <form style={search} onSubmit={this.handleSubmit}>
+                    <label >
+                        Zip Code: <input type="text" name="zip" onChange={this.handleChange}/>
+                    </label>
+                </form>
+
+                <div>
+                    {this.state.cities.map(city => <p style={result}>{city.City},{city.State}</p>)}
+                </div>
+
+            </React.Fragment>
+        )
+    }
+}
 
 ReactDOM.render(
     <ZipSearch />,
