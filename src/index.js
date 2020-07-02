@@ -5,42 +5,45 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-const divStyle = {
-    fontSize: '300%',
-    fontWeight: 'bold',
-    fontFamily: "Times New Roman",
-    color: '#ffffcc'
-}
+document.body.style = 'background: #ffffcc;';
 
-const boxColor = {
+const headBox = {
     paddingTop: '50px',
     paddingBottom: '40px',
     paddingLeft: '80px',
     backgroundColor: '#ff0066',
-    //marginLeft: '50px',
-    //marginTop: '20px',
-    //marginRight: '50px'
 }
+
+const title = {
+    fontSize: '300%',
+    fontFamily: "Times New Roman",
+    fontWeight: 'bold',
+    color: '#ffffcc'
+}
+
 const search = {
-    fontFamily: 'Impact',
+    fontFamily: 'Helvetica',
+    fontWeight : 'bold',
     display: 'flex',
     justifyContent: 'center',
-    marginTop: '20px'
+    margin: '20px'
 }
 
 const result = {
-    display: 'flex',
-    justifyContent: 'center',
-    borderStyle: 'double',
-    marginLeft: '400px',
-    marginTop: '30px',
-    marginRight: '400px',
-    borderRadius: '10px'
+    marginTop: '.5%',
+    marginLeft: '40%',
+    marginRight: '40%',
+    borderStyle: 'solid',
+    borderRadius: '10px',
+    backgroundColor: '#fdfcfc'
 }
 
-const cellHead = {
-    //backgroundColor : 'grey'
+const cellTitle = {
+    fontSize: "110%",
+    fontFamily: "Times New Roman",
+    marginLeft: '4%'
 }
+
 
 export default class ZipSearch extends React.Component{
     constructor(props) {
@@ -56,14 +59,15 @@ export default class ZipSearch extends React.Component{
 
         event.preventDefault();
 
-        this.setState({ els:[] });
+        // Set cities to an empty list, so that the cities of the previous search a no longer displayed. 
         this.setState({ cities:[] });
 
-
+        // Concatonate input to url and place result in cities array.
         axios.get("http://ctp-zip-api.herokuapp.com/zip/" + this.state.zip).then(results => {
-                this.setState({ cities: results.data });
-            }).catch(function (err) {
-                alert("Zip code not found.");
+            this.setState({ cities: results.data });
+        // If call to axios.get() fails, alert user that their input was invalid. 
+        }).catch(function (err) {
+                alert("Invalid zip code.");
             }
         );
     }
@@ -75,28 +79,39 @@ export default class ZipSearch extends React.Component{
     render() {
         return (
             <React.Fragment>
-                <div style={boxColor}>
-                    <div style={divStyle} >
-                       Zip Code Search 
-                    </div>
+
+                {/* Box containing the name of the page */}
+                <div style={headBox}>
+
+                    {/* Page title */}
+                    <div style={title}> Zip Code Search </div>
+
                 </div>
 
+                {/* User input */}
                 <form style={search} onSubmit={this.handleSubmit}>
-                    <label >
-                        Zip Code: <input type="text" name="zip" onChange={this.handleChange} />
+                    <label > Enter zip code:
+                        <input type="text" name="zip" onChange={this.handleChange}/>
                     </label>
                 </form>
-             
+
+                {/* Display information for valid zip code */}
                 <div>
+
+                    {/* For each city in cities ... */}
                     {this.state.cities.map(city =>
+
+                        //  Create a div which will act as a cell to diplay city information
                         <div key={city.RecordNumber} style={result}>
-                            <header style={cellHead}>{city.City},{city.State}</header>
-                            <ul>
+
+                            {/* Title for each cell which include a city's name and state. */}
+                            <p style={cellTitle}> {city.City}, {city.State} </p>
+
+                            <ul style ={{fontFamily: "Times New Roman"}} >
                                 <li>State: {city.State}</li>
                                 <li>Location: ({city.Lat},{city.Long})</li>
                                 <li>Population (estimated): {city.EstimatedPopulation}</li>
                                 <li>Total wages: {city.TotalWages}</li>
-
                             </ul>
                         </div>)
                     }
