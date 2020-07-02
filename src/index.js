@@ -8,9 +8,9 @@ import * as serviceWorker from './serviceWorker';
 document.body.style = 'background: #ffffcc;';
 
 const headBox = {
-    paddingTop: '50px',
-    paddingBottom: '40px',
-    paddingLeft: '80px',
+    paddingTop: '3%',
+    paddingBottom: '2%',
+    paddingLeft: '10%',
     backgroundColor: '#ff0066',
 }
 
